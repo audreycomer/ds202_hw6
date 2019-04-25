@@ -1,0 +1,98 @@
+---
+title: "hw6"
+author: "Audrey Comer"
+date: "4/23/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Import the data
+```{r}
+library(dplyr)
+df_fullbest <- readxl::read_xlsx('KIB - Best in Show (public).xlsx', sheet='Best in show full sheet')
+```
+
+Select only the relevant columns, then remove the irrelevant rows (1,2,3)
+```{r}
+df <- df_fullbest %>% select('Best in show?','largest value', '..5','160','87','80', '..12', '..32')
+df1 <- df[-c(1:3),]
+```
+
+Recode column names
+```{r}
+names(df1)[1] <- "breed"
+names(df1)[2] <- "category"
+names(df1)[3] <- "score"
+names(df1)[4] <- "pop1"
+names(df1)[5] <- "popularity"
+names(df1)[6] <- "intel1"
+names(df1)[7] <- "intel2"
+names(df1)[8] <- "size"
+```
+
+
+Change data types
+```{r}
+df1$breed <- as.factor(df1$breed)
+df1$category <- as.factor(df1$category)
+df1$score <- as.numeric(df1$score)
+df1$pop1 <- as.numeric(df1$pop1)
+df1$popularity <- as.numeric(df1$popularity)
+df1$intel1 <- as.numeric(df1$intel1)
+df1$intel2 <- as.numeric(df1$intel2)
+df1$size <- as.factor(df1$size)
+```
+
+Reordering any factors
+```{r}
+df1$size <- factor(df1$size, levels = c("small", "medium", "large"))
+```
+
+```{r}
+df1 <- df1 %>%
+  mutate(intel = as.factor(ifelse(intel1>40,0,1)))
+```
+
+
+Notes: 
+[OK] - Need to make the text (label) size unrelated to the ggplot aes size (size of dot).
+[OK] - Need to offset labels from each other (ggrepel)
+[ok-ish] - Need to add quadrants and labels on each end of the quadrant.
+
+Need to add legend and split it up.
+[OK] - Need to add axis labels.
+[OK] - Add title.
+
+```{r}
+library(ggplot2)
+library(plotly)
+library(ggrepel)
+plt <- ggplot(df1, 
+              aes(x=score, 
+                  y=-popularity, 
+                  size=size, 
+                  col=category,
+                  shape=intel,
+                  label=breed), xlim=5, ylim=0.2) + 
+  geom_point(aes(alpha=0.9)) + 
+  ggrepel::geom_text_repel(data=df1, aes(label=breed), size=2, col="black") +
+  theme_bw() +
+  theme(legend.position = "none", line=element_blank(), axis.text.x = element_blank(), axis.text.y = element_blank()) + 
+ # geom_text(data=df1, aes(x=score, y=-popularity, label=breed), size=3, col="black") +
+  geom_vline(xintercept = 2.315) + geom_hline(yintercept = -59.5) + 
+  annotate("text", x = 3.5, y = 0, label = "Hot Dogs!") +
+  annotate("text", x = 1.5, y = 0, label = "Inexplicably Overrated") +
+  annotate("text", x = 3.5, y = -91, label = "Hidden Treasures") +
+  annotate("text", x = 1.5, y = -91, label = "Rightfully Ignored") + 
+  labs(title="Best in Show: The Ultimate Data Dog",
+       x="Our Score",
+       y="Popularity")
+
+plt
+#ggplotly(plt)
+```
+
+
