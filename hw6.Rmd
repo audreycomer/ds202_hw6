@@ -61,10 +61,11 @@ Notes:
 [OK] - Need to make the text (label) size unrelated to the ggplot aes size (size of dot).
 [OK] - Need to offset labels from each other (ggrepel)
 [ok-ish] - Need to add quadrants and labels on each end of the quadrant.
-
-Need to add legend and split it up.
 [OK] - Need to add axis labels.
 [OK] - Add title.
+
+Need to add legend and split it up.
+
 
 ```{r}
 library(ggplot2)
@@ -79,7 +80,7 @@ plt <- ggplot(df1,
                   label=breed), xlim=5, ylim=0.2) + 
   geom_point(aes(alpha=0.9)) + 
   ggrepel::geom_text_repel(data=df1, aes(label=breed), size=2, col="black") +
-  theme_bw() +
+  theme(panel.background = element_blank()) +
   theme(legend.position = "none", line=element_blank(), axis.text.x = element_blank(), axis.text.y = element_blank()) + 
  # geom_text(data=df1, aes(x=score, y=-popularity, label=breed), size=3, col="black") +
   geom_vline(xintercept = 2.315) + geom_hline(yintercept = -59.5) + 
@@ -87,9 +88,13 @@ plt <- ggplot(df1,
   annotate("text", x = 1.5, y = 0, label = "Inexplicably Overrated") +
   annotate("text", x = 3.5, y = -91, label = "Hidden Treasures") +
   annotate("text", x = 1.5, y = -91, label = "Rightfully Ignored") + 
+  annotate("segment", x=1, y=-94, xend=3.5, yend=-94,
+               col="red", arrow=arrow(length=unit(0.3, "cm"))) +
+  annotate("segment", x=0.94, y=-94, xend=0.94, yend=-1,
+               col="blue", arrow=arrow(length=unit(0.3, "cm"))) +
   labs(title="Best in Show: The Ultimate Data Dog",
        x="Our Score",
-       y="Popularity")
+       y="Popularity") + theme(axis.title.y = element_text(angle = 0, color="blue"), axis.title.x = element_text(angle=0, color="red"))
 
 plt
 #ggplotly(plt)
