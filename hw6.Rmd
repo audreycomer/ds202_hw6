@@ -84,11 +84,11 @@ plt <- ggplot(df1,
   theme(legend.position = "none", line=element_blank(), axis.text.x = element_blank(), axis.text.y = element_blank()) + 
  # geom_text(data=df1, aes(x=score, y=-popularity, label=breed), size=3, col="black") +
   geom_vline(xintercept = 2.315) + geom_hline(yintercept = -59.5) + 
-  annotate("text", x = 3.5, y = 0, label = "Hot Dogs!") +
-  annotate("text", x = 1.5, y = 0, label = "Inexplicably Overrated") +
-  annotate("text", x = 3.5, y = -91, label = "Hidden Treasures") +
-  annotate("text", x = 1.5, y = -91, label = "Rightfully Ignored") + 
-  annotate("segment", x=1, y=-94, xend=3.5, yend=-94,
+  annotate("label", x = 3.5, y = 0, label = "Hot Dogs!") +
+  annotate("label", x = 1.5, y = 0, label = "Inexplicably Overrated") +
+  annotate("label", x = 3.5, y = -91, label = "Hidden Treasures") +
+  annotate("label", x = 1.5, y = -91, label = "Rightfully Ignored") + 
+  annotate("segment", x=1, y=-95, xend=3.5, yend=-95,
                col="red", arrow=arrow(length=unit(0.3, "cm"))) +
   annotate("segment", x=0.94, y=-94, xend=0.94, yend=-1,
                col="blue", arrow=arrow(length=unit(0.3, "cm"))) +
